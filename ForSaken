@@ -146,14 +146,14 @@ end)
 local Button = Tab:CreateButton({
    Name = "Esp generators",
    Callback = function()
-   local mainFolder = game:GetService("Workspace").Map.Ingame.Map.Generator.Main
+   local main = game:GetService("Workspace").Map.Ingame.Map.Generator.Main
 
-for _, obj in pairs(mainFolder:GetDescendants()) do
+for _, obj in ipairs(main:GetChildren()) do
     if obj:IsA("BasePart") then
         -- Создаём BillboardGui
         local billboard = Instance.new("BillboardGui")
-        billboard.Size = UDim2.new(0, 100, 0, 50)
-        billboard.Adornee = obj
+        billboard.Size = UDim2.new(0, 200, 0, 50) -- размер
+        billboard.StudsOffset = Vector3.new(0, 3, 0) -- высота над объектом
         billboard.AlwaysOnTop = true
         billboard.Parent = obj
 
@@ -164,7 +164,11 @@ for _, obj in pairs(mainFolder:GetDescendants()) do
         textLabel.Text = "Generator"
         textLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- зелёный
         textLabel.TextScaled = true
+        textLabel.Font = Enum.Font.SourceSansBold
         textLabel.Parent = billboard
+
+        -- Привязываем BillboardGui к объекту
+        billboard.Adornee = obj
     end
 end
    end,
