@@ -37,6 +37,77 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
+local Tab = Window:CreateTab("player", "rewind")
+local Section = Tab:CreateSection("player")
+
+local Button = Tab:CreateButton({
+   Name = "invisible (beta)",
+   Callback = function()
+   local Players = game:GetService("Players")
+
+local function setInvisible(player)
+    local character = player.Character
+    if not character then return end
+
+    for _, part in pairs(character:GetChildren()) do
+        if part:IsA("BasePart") then
+            part.Transparency = 1  -- Полностью прозрачный
+            part.CanCollide = false -- Нет столкновений
+        elseif part:IsA("Decal") or part:IsA("Texture") then
+            part.Transparency = 1
+        end
+    end
+end
+
+local function setVisible(player)
+    local character = player.Character
+    if not character then return end
+
+    for _, part in pairs(character:GetChildren()) do
+        if part:IsA("BasePart") then
+            part.Transparency = 0
+            part.CanCollide = true
+        elseif part:IsA("Decal") or part:IsA("Texture") then
+            part.Transparency = 0
+        end
+    end
+end
+
+-- Пример вызова:
+local player = Players.LocalPlayer  -- Для локального скрипта
+setInvisible(player)
+
+-- Чтобы вернуть видимость, вызови:
+-- setVisible(player)
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "god mode (beta)",
+   Callback = function()
+   local Players = game:GetService("Players")
+
+local function enableGodMode(player)
+    local character = player.Character
+    if not character then return end
+
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        -- Отключаем урон через событие HealthChanged
+        humanoid.HealthChanged:Connect(function(health)
+            if health < humanoid.MaxHealth then
+                humanoid.Health = humanoid.MaxHealth
+            end
+        end)
+    end
+end
+
+-- Пример вызова:
+local player = Players.LocalPlayer  -- Для локального скрипта
+enableGodMode(player)
+   end,
+})
+
 local Tab = Window:CreateTab("Esp", "rewind")
 local Section = Tab:CreateSection("Esp killers, Esp players")
 
