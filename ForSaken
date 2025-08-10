@@ -27,7 +27,7 @@ local Window = Rayfield:CreateWindow({
 
    KeySystem = true, -- Set this to true to use our key system
    KeySettings = {
-      Title = "ForSaken",
+      Title = "99 NIGHT IN THE FOREST",
       Subtitle = "KEY?",
       Note = "key in discord", -- Use this to tell the user how to get a key
       FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
@@ -298,5 +298,87 @@ task.spawn(function()
         end
     end
 end)
+   end,
+})
+
+local Tab = Window:CreateTab("teleport", "rewind")
+local Section = Tab:CreateSection("teleport")
+
+local Button = Tab:CreateButton({
+   Name = "teleport to player",
+   Callback = function()
+   local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Создание GUI
+local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
+screenGui.Name = "TPMenu"
+
+local frame = Instance.new("Frame", screenGui)
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+
+-- Выбранный игрок
+local selectedPlayer = nil
+
+-- Список игроков
+local uiList = Instance.new("UIListLayout", frame)
+uiList.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Заголовок
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "Выбери игрока:"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 20
+
+-- Кнопки игроков
+for _, player in pairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        local btn = Instance.new("TextButton", frame)
+        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.Text = player.Name
+        btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        btn.TextColor3 = Color3.new(1, 1, 1)
+        btn.Font = Enum.Font.SourceSans
+        btn.TextSize = 18
+
+        btn.MouseButton1Click:Connect(function()
+            selectedPlayer = player
+            -- Подсветка выбора
+            for _, otherBtn in pairs(frame:GetChildren()) do
+                if otherBtn:IsA("TextButton") then
+                    otherBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+                end
+            end
+            btn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+        end)
+    end
+end
+
+-- Кнопка "ТП"
+local tpButton = Instance.new("TextButton", frame)
+tpButton.Size = UDim2.new(1, 0, 0, 30)
+tpButton.Text = "Телепортироваться"
+tpButton.BackgroundColor3 = Color3.fromRGB(70, 120, 70)
+tpButton.TextColor3 = Color3.new(1, 1, 1)
+tpButton.Font = Enum.Font.SourceSansBold
+tpButton.TextSize = 18
+
+tpButton.MouseButton1Click:Connect(function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(2, 0, 0)
+        end
+    end
+    screenGui:Destroy() -- Удалить меню после ТП
+end)
+   end,
+})
    end,
 })
